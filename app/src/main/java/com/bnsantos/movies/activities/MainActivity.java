@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -12,6 +13,7 @@ import com.bnsantos.movies.App;
 import com.bnsantos.movies.MovieListType;
 import com.bnsantos.movies.R;
 import com.bnsantos.movies.Utils;
+import com.bnsantos.movies.adapter.MovieAdapter;
 import com.bnsantos.movies.controller.request.RetrieveMoviesRequest;
 import com.bnsantos.movies.model.Movie;
 
@@ -19,6 +21,8 @@ import java.util.List;
 
 
 public class MainActivity extends Activity implements Response.ErrorListener, Response.Listener<List<Movie>> {
+    private ListView mListView;
+    private MovieAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,10 @@ public class MainActivity extends Activity implements Response.ErrorListener, Re
         setContentView(R.layout.activity_main);
 
         App.getInstance().getRestController().addRequest(new RetrieveMoviesRequest(MovieListType.IN_THEATERS, 10, this, this), "retrieving movies");
+
+        mListView = (ListView) findViewById(R.id.moviesListView);
+        mAdapter = new MovieAdapter(this, R.layout.adapter_movie);
+        mListView.setAdapter(mAdapter);
     }
 
 
@@ -60,5 +68,7 @@ public class MainActivity extends Activity implements Response.ErrorListener, Re
     @Override
     public void onResponse(List<Movie> movies) {
         Toast.makeText(this, "worked", Toast.LENGTH_SHORT).show();
+        mAdapter.addAll(movies);
+        //mAdapter.notifyDataSetChanged();
     }
 }
