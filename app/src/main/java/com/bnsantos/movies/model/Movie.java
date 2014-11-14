@@ -14,6 +14,7 @@ public class Movie {
     private Ratings ratings;
     private String synopsis;
     private Posters posters;
+    private Links links;
 
     public String getId() {
         return id;
@@ -93,5 +94,13 @@ public class Movie {
 
     public void setPosters(Posters posters) {
         this.posters = posters;
+    }
+
+    public Links getLinks() {
+        return links;
+    }
+
+    public void setLinks(Links links) {
+        this.links = links;
     }
 }

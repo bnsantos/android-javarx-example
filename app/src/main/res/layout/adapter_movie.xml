@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/movie_width"
-    android:layout_height="@dimen/movie_height"
-    android:gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/moviePoster"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="" />
+        android:layout_width="@dimen/movie_width"
+        android:layout_height="@dimen/movie_height"
+        android:layout_alignParentLeft="true"
+        android:contentDescription=""
+        android:src="@drawable/interstellar" />
 
     <TextView
         android:id="@+id/movieScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/small_margin"
-        android:background="@android:color/white"
+        android:layout_below="@+id/movieRating"
+        android:layout_marginLeft="@dimen/medium_margin"
+        android:layout_toEndOf="@+id/moviePoster"
+        android:layout_toRightOf="@+id/moviePoster"
         android:contentDescription=""
         android:text="@string/movie_score"
         android:textSize="@dimen/movie_info" />
@@ -26,24 +27,27 @@
         android:id="@+id/movieRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/small_margin"
-        android:background="@android:color/white"
+        android:layout_below="@+id/movieTitle"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/medium_margin"
+        android:layout_toEndOf="@+id/moviePoster"
+        android:layout_toRightOf="@+id/moviePoster"
         android:contentDescription=""
         android:text="@string/movie_rating"
         android:textSize="@dimen/movie_info" />
 
     <TextView
         android:id="@+id/movieTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/small_margin"
-        android:background="@android:color/white"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/medium_margin"
+        android:layout_toEndOf="@+id/moviePoster"
+        android:layout_toRightOf="@+id/moviePoster"
         android:contentDescription=""
         android:maxLines="3"
         android:text="@string/movie_title"
-        android:textSize="@dimen/movie_title" />
+        android:textSize="@dimen/movie_title"
+        android:textStyle="bold" />
 
 </RelativeLayout>

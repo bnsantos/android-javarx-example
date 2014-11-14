@@ -1,6 +1,8 @@
 package com.bnsantos.movies.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +37,17 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         final Movie movie = getItem(position);
 
         viewHolder.title.setText(movie.getTitle());
-        viewHolder.rating.setText(movie.getMpaa_rating());
-        viewHolder.score.setText(Integer.toString(movie.getRatings().getCritics_score()));
+        viewHolder.rating.setText(getContext().getString(R.string.movie_rating, movie.getMpaa_rating()));
+        viewHolder.score.setText(getContext().getString(R.string.movie_score, Integer.toString(movie.getRatings().getCritics_score())));
         Picasso.with(getContext()).load(movie.getPosters().getDetailed()).fit().into(viewHolder.poster);
+        viewHolder.poster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(movie.getLinks().getAlternate()));
+                getContext().startActivity(i);
+            }
+        });
 
         return convertView;
     }
