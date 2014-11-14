@@ -5,6 +5,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.bnsantos.movies.App;
 import com.bnsantos.movies.MovieListType;
 import com.bnsantos.movies.Utils;
 import com.bnsantos.movies.model.Movie;
@@ -34,6 +35,7 @@ public class RetrieveMoviesRequest extends Request<List<Movie>> {
             String raw = new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
             List<Movie> movieList = Utils.Json.fromJson(Utils.Json.extractJsonField(raw, "movies"), new TypeToken<List<Movie>>() {
             }.getType());
+            App.getInstance().getMovieCaching().cache(movieList);
             return Response.success(movieList, HttpHeaderParser.parseCacheHeaders(networkResponse));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(networkResponse));

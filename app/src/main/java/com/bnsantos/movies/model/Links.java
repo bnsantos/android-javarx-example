@@ -1,13 +1,20 @@
 package com.bnsantos.movies.model;
 
+import com.j256.ormlite.field.DatabaseField;
+
 /**
  * Created by bruno on 14/11/14.
  */
 public class Links {
+    @DatabaseField()
     private String self;
+    @DatabaseField()
     private String alternate;
+    @DatabaseField()
     private String cast;
+    @DatabaseField()
     private String reviews;
+    @DatabaseField()
     private String similar;
 
     public String getSelf() {

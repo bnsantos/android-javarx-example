@@ -1,12 +1,16 @@
 package com.bnsantos.movies.model;
 
+import com.j256.ormlite.field.DatabaseField;
+
 import java.util.Date;
 
 /**
  * Created by bruno on 14/11/14.
  */
 public class ReleaseDates {
+    @DatabaseField()
     private Date theater;
+    @DatabaseField()
     private Date dvd;
 
     public Date getTheater() {

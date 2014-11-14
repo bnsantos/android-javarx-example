@@ -1,17 +1,26 @@
 package com.bnsantos.movies.model;
 
+import com.j256.ormlite.field.DatabaseField;
+
 /**
  * Created by bruno on 14/11/14.
  */
 public class Movie {
+    @DatabaseField(canBeNull = false, id = true)
     private String id;
+    @DatabaseField()
     private String title;
+    @DatabaseField()
     private int year;
+    @DatabaseField()
     private String mpaa_rating;
+    @DatabaseField()
     private int runtime;
+    @DatabaseField()
     private String critics_consensus;
     private ReleaseDates release_dates;
     private Ratings ratings;
+    @DatabaseField()
     private String synopsis;
     private Posters posters;
     private Links links;

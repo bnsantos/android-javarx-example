@@ -1,12 +1,18 @@
 package com.bnsantos.movies.model;
 
+import com.j256.ormlite.field.DatabaseField;
+
 /**
  * Created by bruno on 14/11/14.
  */
 public class Ratings {
+    @DatabaseField()
     private String critics_rating;
+    @DatabaseField()
     private int critics_score;
+    @DatabaseField()
     private String audience_rating;
+    @DatabaseField()
     private int audience_score;
 
     public String getCritics_rating() {
