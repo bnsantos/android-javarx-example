@@ -12,7 +12,7 @@ import com.bnsantos.movies.controller.RestController;
 public class App extends Application {
     private static App sInstance;
     private final String mEndPoint = "http://api.rottentomatoes.com/api/public/v1.0/";
-    private final String mApiToken = "365navjkfsvx3872nq8wvyhf"; //Your token here
+    private final String mApiToken = ""; //Your token here
     private RestController mRestController;
     private MovieCaching mMovieCaching;
 

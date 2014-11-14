@@ -28,13 +28,20 @@ public class MovieCaching {
     private void cache(Movie movie) {
         try {
             Log.d(TAG, "Caching movie[" + movie.getId() + "]" + mPersistentManager.getMovieDAO().create(movie));
+            Log.d(TAG, "Caching movie release dates" + mPersistentManager.getReleaseDatesDAO().create(movie.getRelease_dates()));
+            Log.d(TAG, "Caching movie ratings" + mPersistentManager.getRatingsDAO().create(movie.getRatings()));
+            Log.d(TAG, "Caching movie posters" + mPersistentManager.getPostersDAO().create(movie.getPosters()));
+            Log.d(TAG, "Caching movie link" + mPersistentManager.getLinksDAO().create(movie.getLinks()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public List<Movie> fetch() {
-        //TODO
-        return null;
+        try {
+            return mPersistentManager.getMovieDAO().queryForAll();
+        } catch (SQLException e) {
+            return null;
+        }
     }
 }

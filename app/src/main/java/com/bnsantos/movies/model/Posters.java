@@ -6,6 +6,8 @@ import com.j256.ormlite.field.DatabaseField;
  * Created by bruno on 14/11/14.
  */
 public class Posters {
+    @DatabaseField(generatedId = true, columnName = "id")
+    private Integer id;
     @DatabaseField()
     private String thumbnail;
     @DatabaseField()
@@ -14,6 +16,14 @@ public class Posters {
     private String detailed;
     @DatabaseField()
     private String original;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getThumbnail() {
         return thumbnail;

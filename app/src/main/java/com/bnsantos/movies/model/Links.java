@@ -6,6 +6,8 @@ import com.j256.ormlite.field.DatabaseField;
  * Created by bruno on 14/11/14.
  */
 public class Links {
+    @DatabaseField(generatedId = true, columnName = "id")
+    private Integer id;
     @DatabaseField()
     private String self;
     @DatabaseField()
@@ -16,6 +18,14 @@ public class Links {
     private String reviews;
     @DatabaseField()
     private String similar;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getSelf() {
         return self;

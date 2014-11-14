@@ -6,6 +6,8 @@ import com.j256.ormlite.field.DatabaseField;
  * Created by bruno on 14/11/14.
  */
 public class Ratings {
+    @DatabaseField(generatedId = true, columnName = "id")
+    private Integer id;
     @DatabaseField()
     private String critics_rating;
     @DatabaseField()
@@ -14,6 +16,14 @@ public class Ratings {
     private String audience_rating;
     @DatabaseField()
     private int audience_score;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getCritics_rating() {
         return critics_rating;
