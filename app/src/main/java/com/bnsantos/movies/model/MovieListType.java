@@ -1,4 +1,4 @@
-package com.bnsantos.movies;
+package com.bnsantos.movies.model;
 
 /**
  * Created by bruno on 14/11/14.

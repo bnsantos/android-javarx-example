@@ -1,19 +1,18 @@
-package com.bnsantos.movies;
+package com.bnsantos.movies.providers;
 
 import android.util.Log;
 
+import com.bnsantos.movies.App;
+import com.bnsantos.movies.model.MovieListType;
 import com.bnsantos.movies.model.Movie;
 import com.bnsantos.movies.model.MovieResponse;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.internal.operators.OnSubscribeDelay;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 
@@ -24,7 +23,6 @@ public class MovieProvider {
     private final String TAG = MovieProvider.class.getName();
     private final BehaviorSubject<List<Movie>> mMoviesSubject;
     private final Subscription mServerSubscription;
-
 
     public MovieProvider() {
         mMoviesSubject = BehaviorSubject.create(App.getInstance().getMovieCaching().fetch());

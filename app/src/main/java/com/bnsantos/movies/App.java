@@ -3,8 +3,9 @@ package com.bnsantos.movies;
 import android.app.Application;
 
 import com.bnsantos.movies.cache.MovieCaching;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.bnsantos.movies.providers.MovieProvider;
+import com.bnsantos.movies.services.MovieService;
+import com.bnsantos.movies.services.RestErrorHandler;
 
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -31,23 +32,14 @@ public class App extends Application {
         super.onCreate();
         sInstance = this;
         mMovieCaching = new MovieCaching(this);
-
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Utils.Json.DATE_FORMAT)
-                .create();
-
         mRestAdapter = new RestAdapter.Builder()
                 .setEndpoint(mEndPoint)
                 .setErrorHandler(new RestErrorHandler())
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(Utils.Json.releaseDatesGsonConverter()))
                 .build();
         mMovieService = mRestAdapter.create(MovieService.class);
 
         mProvider = new MovieProvider();
-    }
-
-    public String getEndPoint() {
-        return mEndPoint;
     }
 
     public String getApiToken() {

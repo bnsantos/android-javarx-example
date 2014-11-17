@@ -1,4 +1,4 @@
-package com.bnsantos.movies;
+package com.bnsantos.movies.services;
 
 import retrofit.ErrorHandler;
 import retrofit.RetrofitError;
