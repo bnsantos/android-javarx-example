@@ -20,6 +20,7 @@ public class MovieCaching {
     }
 
     public void cache(List<Movie> movieList) {
+        //TODO Do in another thread
         for (Movie movie : movieList) {
             cache(movie);
         }

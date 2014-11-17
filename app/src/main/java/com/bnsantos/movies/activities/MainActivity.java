@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -19,23 +21,59 @@ import com.bnsantos.movies.model.Movie;
 
 import java.util.List;
 
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+
 
 public class MainActivity extends Activity implements Response.ErrorListener, Response.Listener<List<Movie>> {
     private ListView mListView;
     private MovieAdapter mAdapter;
+    private ProgressBar mSpinner;
+
+    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        App.getInstance().getRestController().addRequest(new RetrieveMoviesRequest(MovieListType.IN_THEATERS, 10, this, this), "retrieving movies");
+        initViews();
+        initAdapter();
 
+        mSubscription = App.getInstance().getProvider().subscribe().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Movie>>() {
+                    @Override
+                    public void call(List<Movie> movies) {
+                        Toast.makeText(MainActivity.this, "worked", Toast.LENGTH_SHORT).show();
+                        mAdapter.addAll(movies);
+                        mSpinner.setVisibility(View.GONE);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Toast.makeText(MainActivity.this, "ops... error", Toast.LENGTH_SHORT).show();
+                        mSpinner.setVisibility(View.GONE);
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
+                        Toast.makeText(MainActivity.this, "finished", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private void initViews() {
         mListView = (ListView) findViewById(R.id.moviesListView);
+        mSpinner = (ProgressBar) findViewById(R.id.moviesLoadingSpinner);
+    }
+
+    private void initAdapter() {
         mAdapter = new MovieAdapter(this, R.layout.adapter_movie);
         mListView.setAdapter(mAdapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -63,12 +101,19 @@ public class MainActivity extends Activity implements Response.ErrorListener, Re
     public void onErrorResponse(VolleyError volleyError) {
         Utils.logVolleyError(MainActivity.class.getName(), volleyError);
         Toast.makeText(this, "ops... error", Toast.LENGTH_SHORT).show();
+        mSpinner.setVisibility(View.GONE);
     }
 
     @Override
     public void onResponse(List<Movie> movies) {
         Toast.makeText(this, "worked", Toast.LENGTH_SHORT).show();
         mAdapter.addAll(movies);
-        //mAdapter.notifyDataSetChanged();
+        mSpinner.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mSubscription.unsubscribe();
+        super.onDestroy();
     }
 }

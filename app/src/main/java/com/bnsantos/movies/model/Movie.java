@@ -18,15 +18,15 @@ public class Movie {
     private int runtime;
     @DatabaseField()
     private String critics_consensus;
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoCreate = true)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignAutoCreate = true)
     private ReleaseDates release_dates;
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoCreate = true)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignAutoCreate = true)
     private Ratings ratings;
     @DatabaseField()
     private String synopsis;
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoCreate = true)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignAutoCreate = true)
     private Posters posters;
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoCreate = true)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignAutoCreate = true)
     private Links links;
 
     public String getId() {
