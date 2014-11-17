@@ -3,7 +3,6 @@ package com.bnsantos.movies;
 import android.app.Application;
 
 import com.bnsantos.movies.cache.MovieCaching;
-import com.bnsantos.movies.controller.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,7 +15,7 @@ import retrofit.converter.GsonConverter;
 public class App extends Application {
     private static App sInstance;
     private final String mEndPoint = "http://api.rottentomatoes.com/api/public/v1.0";
-    private final String mApiToken = "365navjkfsvx3872nq8wvyhf"; //Your token here
+    private final String mApiToken = ""; //Your token here
     private MovieCaching mMovieCaching;
     private MovieProvider mProvider;
 

@@ -9,14 +9,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.bnsantos.movies.App;
-import com.bnsantos.movies.MovieListType;
 import com.bnsantos.movies.R;
-import com.bnsantos.movies.Utils;
 import com.bnsantos.movies.adapter.MovieAdapter;
-import com.bnsantos.movies.controller.request.RetrieveMoviesRequest;
 import com.bnsantos.movies.model.Movie;
 
 import java.util.List;
@@ -27,7 +22,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 
 
-public class MainActivity extends Activity implements Response.ErrorListener, Response.Listener<List<Movie>> {
+public class MainActivity extends Activity {
     private ListView mListView;
     private MovieAdapter mAdapter;
     private ProgressBar mSpinner;
@@ -95,20 +90,6 @@ public class MainActivity extends Activity implements Response.ErrorListener, Re
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError volleyError) {
-        Utils.logVolleyError(MainActivity.class.getName(), volleyError);
-        Toast.makeText(this, "ops... error", Toast.LENGTH_SHORT).show();
-        mSpinner.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onResponse(List<Movie> movies) {
-        Toast.makeText(this, "worked", Toast.LENGTH_SHORT).show();
-        mAdapter.addAll(movies);
-        mSpinner.setVisibility(View.GONE);
     }
 
     @Override
