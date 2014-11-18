@@ -80,13 +80,14 @@ public class MovieProvider {
     }
 
     private Observable<List<Movie>> retrieveServerMovies() {
-        return App.getInstance().getMovieService().retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), App.getInstance().getApiToken(), 10, 1, "us").map(new Func1<MovieResponse, List<Movie>>() {
-            @Override
-            public List<Movie> call(MovieResponse movieResponse) {
-                Log.d(TAG, "Mapping server response");
-                return movieResponse.getMovies();
-            }
-        });
+        return App.getInstance().getMovieService().retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), App.getInstance().getApiToken(), 10, 1, "us")
+                .map(new Func1<MovieResponse, List<Movie>>() {
+                    @Override
+                    public List<Movie> call(MovieResponse movieResponse) {
+                        Log.d(TAG, "Mapping server response");
+                        return movieResponse.getMovies();
+                    }
+                });
     }
 
     private Observable<List<Movie>> retrieveCachedMovies() {
