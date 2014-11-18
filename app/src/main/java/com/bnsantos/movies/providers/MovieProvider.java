@@ -14,6 +14,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 
@@ -29,7 +30,7 @@ public class MovieProvider {
     public MovieProvider() {
         mMoviesSubject = BehaviorSubject.create();
 
-        mCacheSubscription = retrieveCachedMovies().subscribeOn(Schedulers.io()).subscribe(new Action1<List<Movie>>() {
+        mCacheSubscription = retrieveCachedMovies().subscribeOn(Schedulers.newThread()).subscribe(new Action1<List<Movie>>() {
             @Override
             public void call(List<Movie> movies) {
                 try {
@@ -49,20 +50,20 @@ public class MovieProvider {
         }, new Action0() {
             @Override
             public void call() {
-                Log.d(TAG, "Cache completed, un subscribing");
+                Log.d(TAG, "Cache completed");
             }
         });
 
-        mServerSubscription = retrieveServerMovies().subscribeOn(Schedulers.io()).subscribe(new Action1<MovieResponse>() {
+        mServerSubscription = retrieveServerMovies().subscribeOn(Schedulers.newThread()).subscribe(new Action1<List<Movie>>() {
             @Override
-            public void call(MovieResponse movieResponse) {
+            public void call(List<Movie> movieList) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 Log.d(TAG, "Server got movies");
-                mMoviesSubject.onNext(movieResponse.getMovies());
+                mMoviesSubject.onNext(movieList);
             }
         }, new Action1<Throwable>() {
             @Override
@@ -73,19 +74,26 @@ public class MovieProvider {
         }, new Action0() {
             @Override
             public void call() {
-                Log.d(TAG, "Server completed, un subscribing");
+                Log.d(TAG, "Server completed");
             }
         });
     }
 
-    private Observable<MovieResponse> retrieveServerMovies() {
-        return App.getInstance().getMovieService().retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), App.getInstance().getApiToken(), 10, 1, "us");
+    private Observable<List<Movie>> retrieveServerMovies() {
+        return App.getInstance().getMovieService().retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), App.getInstance().getApiToken(), 10, 1, "us").map(new Func1<MovieResponse, List<Movie>>() {
+            @Override
+            public List<Movie> call(MovieResponse movieResponse) {
+                Log.d(TAG, "Mapping server response");
+                return movieResponse.getMovies();
+            }
+        });
     }
 
     private Observable<List<Movie>> retrieveCachedMovies() {
         return Observable.create(new Observable.OnSubscribe<List<Movie>>() {
             @Override
             public void call(Subscriber<? super List<Movie>> subscriber) {
+                Log.d(TAG, "Retrieving movies from cache");
                 subscriber.onNext(App.getInstance().getMovieCaching().fetch());
                 subscriber.onCompleted();
             }
@@ -98,6 +106,7 @@ public class MovieProvider {
     }
 
     public Observable<List<Movie>> subscribe() {
-        return mMoviesSubject;
+        return Observable.merge(retrieveCachedMovies(), retrieveServerMovies());
+        //return mMoviesSubject;
     }
 }

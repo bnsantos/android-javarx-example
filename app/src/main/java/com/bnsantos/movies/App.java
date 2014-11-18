@@ -61,6 +61,11 @@ public class App extends Application {
         return mProvider;
     }
 
+    public void clearProvider() {
+        mProvider.unSubscribe();
+        mProvider = null;
+    }
+
     public MovieService getMovieService() {
         return mMovieService;
     }

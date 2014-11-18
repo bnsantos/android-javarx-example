@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void call(List<Movie> movies) {
                         Toast.makeText(MainActivity.this, "worked " + from++, Toast.LENGTH_SHORT).show();
+                        mAdapter.clear();
                         mAdapter.addAll(movies);
                         mSpinner.setVisibility(View.GONE);
                     }
@@ -96,6 +97,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         mSubscription.unsubscribe();
+        App.getInstance().clearProvider();
         super.onDestroy();
     }
 }
