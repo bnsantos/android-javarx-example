@@ -7,8 +7,14 @@ import com.bnsantos.movies.providers.MovieProvider;
 import com.bnsantos.movies.services.MovieService;
 import com.bnsantos.movies.services.RestErrorHandler;
 
+import java.lang.reflect.Type;
+
 import retrofit.RestAdapter;
+import retrofit.converter.ConversionException;
+import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedInput;
+import retrofit.mime.TypedOutput;
 
 /**
  * Created by bruno on 14/11/14.
@@ -38,8 +44,6 @@ public class App extends Application {
                 .setConverter(new GsonConverter(Utils.Json.releaseDatesGsonConverter()))
                 .build();
         mMovieService = mRestAdapter.create(MovieService.class);
-
-        mProvider = new MovieProvider();
     }
 
     public String getApiToken() {
@@ -51,6 +55,9 @@ public class App extends Application {
     }
 
     public MovieProvider getProvider() {
+        if (mProvider == null) {
+            mProvider = new MovieProvider();
+        }
         return mProvider;
     }
 

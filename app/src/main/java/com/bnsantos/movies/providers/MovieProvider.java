@@ -3,13 +3,14 @@ package com.bnsantos.movies.providers;
 import android.util.Log;
 
 import com.bnsantos.movies.App;
-import com.bnsantos.movies.model.MovieListType;
 import com.bnsantos.movies.model.Movie;
+import com.bnsantos.movies.model.MovieListType;
 import com.bnsantos.movies.model.MovieResponse;
 
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -23,48 +24,80 @@ public class MovieProvider {
     private final String TAG = MovieProvider.class.getName();
     private final BehaviorSubject<List<Movie>> mMoviesSubject;
     private final Subscription mServerSubscription;
+    private final Subscription mCacheSubscription;
 
     public MovieProvider() {
-        mMoviesSubject = BehaviorSubject.create(App.getInstance().getMovieCaching().fetch());
-        mMoviesSubject.subscribeOn(Schedulers.io());
+        mMoviesSubject = BehaviorSubject.create();
 
-        mServerSubscription = getMovieList();
-    }
-
-    public Observable<List<Movie>> subscribe() {
-        observe();
-        return mMoviesSubject;
-    }
-
-    private Subscription getMovieList() {
-        return App.getInstance().getMovieService().retrieveMovies(
-                MovieListType.IN_THEATERS.name().toLowerCase(),
-                App.getInstance().getApiToken(),
-                10,
-                1,
-                "us").subscribe(new Action1<MovieResponse>() {
+        mCacheSubscription = retrieveCachedMovies().subscribeOn(Schedulers.io()).subscribe(new Action1<List<Movie>>() {
             @Override
-            public void call(MovieResponse response) {
-                Log.i(TAG, "Rest received response");
-                App.getInstance().getMovieCaching().cache(response.getMovies());
-                mMoviesSubject.onNext(App.getInstance().getMovieCaching().fetch());
+            public void call(List<Movie> movies) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Cache got movies");
+                mMoviesSubject.onNext(movies);
             }
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                Log.e(TAG, "Error", throwable);
+                Log.d(TAG, "Cache error", throwable);
                 mMoviesSubject.onError(throwable);
             }
         }, new Action0() {
             @Override
             public void call() {
-                Log.i(TAG, "Rest completed");
-                mMoviesSubject.onCompleted();
+                Log.d(TAG, "Cache completed, un subscribing");
+            }
+        });
+
+        mServerSubscription = retrieveServerMovies().subscribeOn(Schedulers.io()).subscribe(new Action1<MovieResponse>() {
+            @Override
+            public void call(MovieResponse movieResponse) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Server got movies");
+                mMoviesSubject.onNext(movieResponse.getMovies());
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                Log.d(TAG, "Server error", throwable);
+                mMoviesSubject.onError(throwable);
+            }
+        }, new Action0() {
+            @Override
+            public void call() {
+                Log.d(TAG, "Server completed, un subscribing");
             }
         });
     }
 
-    private void observe() {
-        mMoviesSubject.observeOn(Schedulers.io()).subscribe();
+    private Observable<MovieResponse> retrieveServerMovies() {
+        return App.getInstance().getMovieService().retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), App.getInstance().getApiToken(), 10, 1, "us");
+    }
+
+    private Observable<List<Movie>> retrieveCachedMovies() {
+        return Observable.create(new Observable.OnSubscribe<List<Movie>>() {
+            @Override
+            public void call(Subscriber<? super List<Movie>> subscriber) {
+                subscriber.onNext(App.getInstance().getMovieCaching().fetch());
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    public void unSubscribe() {
+        mCacheSubscription.unsubscribe();
+        mServerSubscription.unsubscribe();
+    }
+
+    public Observable<List<Movie>> subscribe() {
+        return mMoviesSubject;
     }
 }

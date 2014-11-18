@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
     private ProgressBar mSpinner;
 
     private Subscription mSubscription;
+    private int from = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class MainActivity extends Activity {
                 .subscribe(new Action1<List<Movie>>() {
                     @Override
                     public void call(List<Movie> movies) {
-                        Toast.makeText(MainActivity.this, "worked", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "worked " + from++, Toast.LENGTH_SHORT).show();
                         mAdapter.addAll(movies);
                         mSpinner.setVisibility(View.GONE);
                     }
