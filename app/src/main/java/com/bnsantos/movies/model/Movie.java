@@ -6,7 +6,7 @@ import com.j256.ormlite.field.DatabaseField;
  * Created by bruno on 14/11/14.
  */
 public class Movie {
-    @DatabaseField(canBeNull = false, id = true)
+    @DatabaseField(canBeNull = false, id = true, unique = true, columnName = "id")
     private String id;
     @DatabaseField()
     private String title;

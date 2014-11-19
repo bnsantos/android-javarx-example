@@ -28,11 +28,11 @@ public class MovieCaching {
 
     private void cache(Movie movie) {
         try {
-            Log.d(TAG, "Caching movie[" + movie.getId() + "]" + mPersistentManager.getMovieDAO().create(movie));
-            Log.d(TAG, "Caching movie release dates" + mPersistentManager.getReleaseDatesDAO().create(movie.getRelease_dates()));
-            Log.d(TAG, "Caching movie ratings" + mPersistentManager.getRatingsDAO().create(movie.getRatings()));
-            Log.d(TAG, "Caching movie posters" + mPersistentManager.getPostersDAO().create(movie.getPosters()));
-            Log.d(TAG, "Caching movie link" + mPersistentManager.getLinksDAO().create(movie.getLinks()));
+            Log.d(TAG, "Caching movie[" + movie.getId() + "] release dates " + mPersistentManager.getReleaseDatesDAO().createOrUpdate(movie.getRelease_dates()).getNumLinesChanged());
+            Log.d(TAG, "Caching movie[" + movie.getId() + "] ratings " + mPersistentManager.getRatingsDAO().createOrUpdate(movie.getRatings()).getNumLinesChanged());
+            Log.d(TAG, "Caching movie[" + movie.getId() + "] posters " + mPersistentManager.getPostersDAO().createOrUpdate(movie.getPosters()).getNumLinesChanged());
+            Log.d(TAG, "Caching movie[" + movie.getId() + "] link " + mPersistentManager.getLinksDAO().createOrUpdate(movie.getLinks()).getNumLinesChanged());
+            Log.d(TAG, "Caching movie[" + movie.getId() + "] " + mPersistentManager.getMovieDAO().createOrUpdate(movie).getNumLinesChanged());
         } catch (SQLException e) {
             e.printStackTrace();
         }

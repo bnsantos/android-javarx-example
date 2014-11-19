@@ -97,7 +97,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         mSubscription.unsubscribe();
-        App.getInstance().clearProvider();
         super.onDestroy();
     }
 }
