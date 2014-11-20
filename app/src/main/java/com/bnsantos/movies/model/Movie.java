@@ -116,4 +116,16 @@ public class Movie {
     public void setLinks(Links links) {
         this.links = links;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Movie
+                && ((Movie) o).id.equals(id)
+                && ((Movie) o).title.equals(title)
+                && ((Movie) o).year == year
+                && ((Movie) o).mpaa_rating.equals(mpaa_rating)
+                && ((Movie) o).runtime == runtime
+                && ((Movie) o).critics_consensus.equals(critics_consensus)
+                && ((Movie) o).synopsis.equals(synopsis);
+    }
 }

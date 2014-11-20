@@ -55,4 +55,5 @@ dependencies {
     androidTestCompile 'junit:junit:4.11'
     androidTestCompile 'com.google.android:android:4.1.1.4'
     androidTestCompile 'com.android.support:support-v4:21.0.+'
+    androidTestCompile "org.mockito:mockito-core:1.+"
 }

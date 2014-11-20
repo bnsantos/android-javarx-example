@@ -1,5 +1,7 @@
 package com.bnsantos.movies.model;
 
+import com.bnsantos.movies.Utils;
+
 import java.util.List;
 
 /**
@@ -32,5 +34,13 @@ public class MovieResponse {
 
     public void setLink_template(String link_template) {
         this.link_template = link_template;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof MovieResponse
+                && ((MovieResponse) o).total == total
+                && Utils.StringUtils.stringCompare(((MovieResponse) o).link_template, link_template)
+                && Utils.MovieUtils.movieListCompare(((MovieResponse) o).movies, movies);
     }
 }
