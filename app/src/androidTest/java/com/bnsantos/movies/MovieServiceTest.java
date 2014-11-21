@@ -39,62 +39,43 @@ public class MovieServiceTest {
 
     @Test
     public void testFetchingMovies() throws Exception {
-        Mockito.when(mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us")).thenReturn(Observable.create(new Observable.OnSubscribe<MovieResponse>() {
+        Observable<MovieResponse> responseObservable = Observable.create(new Observable.OnSubscribe<MovieResponse>() {
             @Override
             public void call(Subscriber<? super MovieResponse> subscriber) {
                 subscriber.onNext(mMovieResponse);
                 subscriber.onCompleted();
             }
-        }));
-        Observable<MovieResponse> movieResponseObservable = mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us");
-        Assert.assertNotNull(movieResponseObservable);
-        movieResponseObservable.subscribe(new Action1<MovieResponse>() {
-            @Override
-            public void call(MovieResponse movieResponse) {
-                Assert.assertEquals(movieResponse, mMovieResponse);
-            }
         });
+        Mockito.when(mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us")).thenReturn(responseObservable);
+        MovieResponse response = mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us").toBlocking().single();
+        Assert.assertEquals(response, mMovieResponse);
     }
 
     @Test
     public void testFetchingEmptyMovies() throws Exception {
         mMovieResponse.setMovies(new ArrayList<Movie>());
-        Mockito.when(mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us")).thenReturn(Observable.create(new Observable.OnSubscribe<MovieResponse>() {
+        Observable<MovieResponse> responseObservable = Observable.create(new Observable.OnSubscribe<MovieResponse>() {
             @Override
             public void call(Subscriber<? super MovieResponse> subscriber) {
                 subscriber.onNext(mMovieResponse);
                 subscriber.onCompleted();
             }
-        }));
-        Observable<MovieResponse> movieResponseObservable = mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us");
-        Assert.assertNotNull(movieResponseObservable);
-        movieResponseObservable.subscribe(new Action1<MovieResponse>() {
-            @Override
-            public void call(MovieResponse movieResponse) {
-                Assert.assertEquals(movieResponse, mMovieResponse);
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                Assert.assertNull(throwable);
-            }
-        }, new Action0() {
-            @Override
-            public void call() {
-                Assert.assertEquals(true, true);
-            }
         });
+        Mockito.when(mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us")).thenReturn(responseObservable);
+
+        MovieResponse response = mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "token", 10, 1, "us").toBlocking().single();
+        Assert.assertEquals(response, mMovieResponse);
     }
 
     @Test
     public void testFetchingMoviesError() throws Exception {
-        mMovieResponse.setMovies(new ArrayList<Movie>());
-        Mockito.when(mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "", 10, 1, "us")).thenReturn(Observable.create(new Observable.OnSubscribe<MovieResponse>() {
+        Observable<MovieResponse> responseObservable = Observable.create(new Observable.OnSubscribe<MovieResponse>() {
             @Override
             public void call(Subscriber<? super MovieResponse> subscriber) {
                 subscriber.onError(new Exception("InvalidToken"));
             }
-        }));
+        });
+        Mockito.when(mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "", 10, 1, "us")).thenReturn(responseObservable);
         Observable<MovieResponse> movieResponseObservable = mMovieService.retrieveMovies(MovieListType.IN_THEATERS.name().toLowerCase(), "", 10, 1, "us");
         Assert.assertNotNull(movieResponseObservable);
         movieResponseObservable.subscribe(new Action1<MovieResponse>() {
