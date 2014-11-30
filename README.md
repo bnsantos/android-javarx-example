@@ -6,10 +6,8 @@ This simple application was built using the [Reactive Extensions for Android](ht
 The movie list is also stored locally on device using a SQLite db with [ormlite](http://ormlite.com/sqlite_java_android_orm.shtml).
 
 Uses also:
-
--[Retrofit](http://square.github.io/retrofit/)
-
--[Picasso](http://square.github.io/picasso/)
+[Retrofit](http://square.github.io/retrofit/),
+[Picasso](http://square.github.io/picasso/)
 
 ####References:####
 [1](http://futurice.com/blog/top-7-tips-for-rxjava-on-android),
